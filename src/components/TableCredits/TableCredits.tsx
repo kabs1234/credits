@@ -1,29 +1,80 @@
-import { creditsFieldsAndHeaders } from '../../const';
+import Box from '@mui/material/Box';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import type { TableCreditsType } from '../../types/types';
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from '@mui/material';
+import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
 
-const tableDataStyles = {
-  border: 'none',
-  borderBottom: '1px solid #eee',
-  position: 'relative',
-  padding: '16px 0',
-  paddingLeft: '50%',
-};
-
-const tableHeaderStyles = {
-  position: 'absolute',
-  top: '16px',
-  left: '6px',
-  width: '45%',
-  whiteSpace: 'nowrap',
-};
+const columns: GridColDef<TableCreditsType[number]>[] = [
+  {
+    field: 'id',
+    headerName: 'ID заявки',
+    width: 85,
+    sortable: false,
+    type: 'string',
+  },
+  {
+    field: 'fullName',
+    headerName: 'ФИО',
+    sortable: false,
+    width: 160,
+  },
+  {
+    field: 'amount',
+    headerName: 'Сумма',
+    width: 90,
+    sortable: true,
+    type: 'number',
+  },
+  {
+    field: 'term',
+    headerName: 'Срок',
+    width: 90,
+    sortable: false,
+    type: 'number',
+  },
+  {
+    field: 'purpose',
+    headerName: 'Цель',
+    width: 150,
+    sortable: false,
+    type: 'string',
+  },
+  {
+    field: 'income',
+    headerName: 'Доход',
+    width: 90,
+    sortable: false,
+    type: 'number',
+  },
+  {
+    field: 'employmentStatus',
+    headerName: 'Статус занятости',
+    width: 135,
+    sortable: false,
+    type: 'custom',
+  },
+  {
+    field: 'creditScore',
+    headerName: 'Кредитный рейтинг',
+    width: 150,
+    sortable: true,
+    type: 'number',
+  },
+  {
+    field: 'status',
+    headerName: 'Статус заявки',
+    width: 120,
+    sortable: false,
+    filterable: true,
+    type: 'custom',
+  },
+  {
+    field: 'createdAt',
+    headerName: 'Дата подачи',
+    width: 180,
+    sortable: true,
+    type: 'string',
+  },
+];
 
 export default function TableCredits({
   credits,
@@ -31,54 +82,26 @@ export default function TableCredits({
   credits: TableCreditsType;
 }) {
   return (
-    <TableContainer>
-      <Table sx={{ border: '1px solid black' }} aria-label="credits table">
-        <TableHead sx={{ display: 'none' }}>
-          <TableRow
-            sx={{
-              border: '1px solid black',
-            }}
-          >
-            {creditsFieldsAndHeaders.map(({ headerName }) => {
-              return (
-                <TableCell sx={{ border: '1px solid black' }} key={headerName}>
-                  {headerName}
-                </TableCell>
-              );
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody sx={{ display: 'grid' }}>
-          {credits.map((credit) => (
-            <TableRow
-              key={credit.id}
-              sx={{
-                border: '1px solid black',
-                '& td': {
-                  display: 'block',
-                },
-              }}
-            >
-              {creditsFieldsAndHeaders.map(({ field, headerName }) => {
-                return (
-                  <TableCell
-                    key={headerName}
-                    sx={{
-                      ...tableDataStyles,
-                      '&:before': {
-                        ...tableHeaderStyles,
-                        content: `"${headerName}"`,
-                      },
-                    }}
-                  >
-                    {credit[field]}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <DataGrid
+        rows={credits}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
+        slots={{
+          toolbar: CreditsToolbar,
+        }}
+        pageSizeOptions={[5]}
+        disableRowSelectionOnClick
+        disableColumnMenu
+        disableColumnResize
+        showToolbar
+      />
+    </Box>
   );
 }
