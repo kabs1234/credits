@@ -15,3 +15,12 @@ export type Credit = {
 };
 
 export type Credits = Credit[];
+
+export type TableCredit = Omit<Credit, 'passportNumber' | 'phone' | 'email'>;
+
+export type TableCreditsType = TableCredit[];
+
+export type CreditFieldAndHeader = {
+  field: keyof TableCredit;
+  headerName: string;
+};
