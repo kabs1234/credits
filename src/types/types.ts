@@ -1,3 +1,35 @@
+export type CreditPurposes =
+  | 'ипотека'
+  | 'автокредит'
+  | 'потребительский'
+  | 'рефинансирование'
+  | 'бизнес';
+
+export type SelectValuesCreditPurposes =
+  | 'mortgage'
+  | 'auto-loan'
+  | 'consumer-loan'
+  | 'refinancing'
+  | 'business';
+
+export type EmploymentStasuses =
+  | 'работает'
+  | 'безработный'
+  | 'пенсионер'
+  | 'самозанятый';
+
+export type SelectValuesEmploymentStasuses =
+  | 'employed'
+  | 'unemployed'
+  | 'retiree'
+  | 'self-employed';
+
+export type CreditRequestStates =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'in_review';
+
 export type Credit = {
   id: string;
   fullName: string;
@@ -6,11 +38,11 @@ export type Credit = {
   email: string;
   amount: number;
   term: number;
-  purpose: string;
+  purpose: CreditPurposes;
   income: number;
-  employmentStatus: string;
+  employmentStatus: EmploymentStasuses;
   creditScore: number;
-  status: string;
+  status: CreditRequestStates;
   createdAt: string;
 };
 
@@ -24,3 +56,7 @@ export type CreditFieldAndHeader = {
   field: keyof TableCredit;
   headerName: string;
 };
+
+export type CreditActions = 'create';
+
+export type RequestCredit = Omit<Credit, 'id' | 'creditScore' | 'status'>;

@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { Namespace } from '../../const';
 import { creditsApi } from '../../api/creditsApi';
-import type { Credits } from '../../types/types';
+import type { Credit, Credits } from '../../types/types';
 
 type CreditsSlice = {
   credits: Credits;
@@ -27,6 +27,12 @@ export const creditsSlice = createSlice({
       (state, action: PayloadAction<Credits>) => {
         state.credits = action.payload;
         state.isLoading = false;
+      }
+    );
+    builder.addMatcher(
+      creditsApi.endpoints.createCredit.matchFulfilled,
+      (state, action: PayloadAction<Credit>) => {
+        state.credits = [...state.credits, action.payload];
       }
     );
   },

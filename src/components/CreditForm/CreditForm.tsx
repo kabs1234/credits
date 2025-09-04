@@ -10,59 +10,91 @@ import {
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateCreditMutation } from '../../api/creditsApi';
+import { useQueryAction } from '../../hooks/hooks';
+import type { Credit, RequestCredit } from '../../types/types';
+import {
+  showSuccessToast,
+  showErrorToast,
+  getActionErrorMessage,
+  getObjectWithErrorMessage,
+  translateEmploymentStasus,
+  translateCreditPurpose,
+} from '../../utils/utils';
 
-type FormType = z.infer<typeof formSchema>;
+export type FormType = z.infer<typeof formSchema>;
 
-const formRequiredErrorMessage = {
-  error: 'Должно быть заполнено',
-};
+const fieldRequiredErrorMessage = getObjectWithErrorMessage(
+  'Должно быть заполнено'
+);
+
+const fieldNotPositiveErrorMessage = getObjectWithErrorMessage(
+  'Значение должны быть положительным'
+);
+
+const fieldNotSelectedErrorMessage = getObjectWithErrorMessage(
+  'Пожалуйста, выберите один из вариантов. Это обязательное поле.'
+);
+
+const zodPositiveNumberField = z.coerce
+  .number<number>(fieldRequiredErrorMessage)
+  .min(1, fieldNotPositiveErrorMessage);
 
 const formSchema = z.object({
-  clientName: z.string().min(2, {
-    error: 'Имя должно иметь не менее 2 символов.',
-  }),
-  passportNumber: z.string().min(7, formRequiredErrorMessage),
-  phone: z.e164(formRequiredErrorMessage),
-  email: z.email(formRequiredErrorMessage),
-  amount: z.number().min(1, formRequiredErrorMessage),
-  term: z.number().min(1, formRequiredErrorMessage),
-  income: z.number().min(1, formRequiredErrorMessage),
-  creditScore: z.number().min(3, formRequiredErrorMessage),
+  fullName: z
+    .string(fieldRequiredErrorMessage)
+    .min(2, getObjectWithErrorMessage('Имя должно иметь не менее 2 символов.')),
+  passportNumber: z.string(fieldRequiredErrorMessage),
+  phone: z.e164(fieldRequiredErrorMessage),
+  email: z.email(fieldRequiredErrorMessage),
+  amount: zodPositiveNumberField,
+  term: zodPositiveNumberField,
+  income: zodPositiveNumberField,
   purpose: z.literal(
     ['mortgage', 'auto-loan', 'consumer-loan', 'refinancing', 'business'],
-    {
-      error: 'Пожалуйста, выберите один из вариантов. Это обязательное поле.',
-    }
+    fieldNotSelectedErrorMessage
   ),
   employmentStatus: z.literal(
     ['employed', 'unemployed', 'retiree', 'self-employed'],
-    {
-      error: 'Пожалуйста, выберите один из вариантов. Это обязательное поле.',
-    }
+    fieldNotSelectedErrorMessage
   ),
 });
 
-export function CreditForm() {
+export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
+  const [createCredit] = useCreateCreditMutation();
+
   const { control, handleSubmit } = useForm<FormType>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      clientName: '',
-      passportNumber: '',
-      amount: 0,
-      income: 0,
-      term: 0,
-      phone: '',
-      email: '',
-    },
     mode: 'onSubmit',
   });
 
-  const onValid: SubmitHandler<FormType> = (data): void => {
-    console.log(data);
+  const onSuccesfulAction = (message: string): void => {
+    showSuccessToast(message);
+
+    if (onModalClose) {
+      onModalClose();
+    }
+  };
+
+  const tryToCreateCredit = useQueryAction<Credit, RequestCredit>({
+    action: createCredit,
+    onSuccess: () => onSuccesfulAction('Заявка была успешно подана!'),
+    onError: () => showErrorToast(getActionErrorMessage('create')),
+  });
+
+  const onValidForm: SubmitHandler<FormType> = (credit): void => {
+    const requestCredit = {
+      ...credit,
+      employmentStatus: translateEmploymentStasus(credit.employmentStatus),
+      purpose: translateCreditPurpose(credit.purpose),
+      createdAt: new Date().toISOString(),
+    };
+
+    tryToCreateCredit(requestCredit);
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <form onSubmit={handleSubmit(onValidForm)}>
       <FormControl
         sx={{
           display: 'grid',
@@ -71,7 +103,7 @@ export function CreditForm() {
         }}
       >
         <Controller
-          name="clientName"
+          name="fullName"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <TextField
