@@ -13,11 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 type FormType = z.infer<typeof formSchema>;
 
+const formRequiredErrorMessage = {
+  error: 'Должно быть заполнено',
+};
+
 const formSchema = z.object({
   clientName: z
     .string()
     .min(2, {
-      error: 'Name must be at least 2 characters.',
+      error: 'Имя должно иметь не менее 2 символов.',
     })
     .refine(
       (formName) => {
@@ -25,37 +29,26 @@ const formSchema = z.object({
         return nameRegExp.test(formName);
       },
       {
-        error: 'Name must be without digits',
+        error: 'Имя должно быть без цифр',
       }
     ),
-  passportNumber: z.string().min(7, {
-    error: 'Must be filled',
-  }),
-  phone: z.e164().nonempty(),
-  email: z.email(),
-  amount: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  term: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  income: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  creditScore: z.number().min(3, {
-    error: 'Must be filled',
-  }),
+  passportNumber: z.string().min(7, formRequiredErrorMessage),
+  phone: z.e164(formRequiredErrorMessage),
+  email: z.email(formRequiredErrorMessage),
+  amount: z.number().min(1, formRequiredErrorMessage),
+  term: z.number().min(1, formRequiredErrorMessage),
+  income: z.number().min(1, formRequiredErrorMessage),
+  creditScore: z.number().min(3, formRequiredErrorMessage),
   purpose: z.literal(
     ['mortgage', 'auto-loan', 'consumer-loan', 'refinancing', 'business'],
     {
-      error: 'Purpose field is required. Choose one of the options please',
+      error: 'Пожалуйста, выберите один из вариантов. Это обязательное поле.',
     }
   ),
   employmentStatus: z.literal(
     ['employed', 'unemployed', 'retiree', 'self-employed'],
     {
-      error:
-        'Employment status field is required. Choose one of the options please',
+      error: 'Пожалуйста, выберите один из вариантов. Это обязательное поле.',
     }
   ),
 });
@@ -63,6 +56,15 @@ const formSchema = z.object({
 export function CreditForm() {
   const { control, handleSubmit } = useForm<FormType>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      clientName: '',
+      passportNumber: '',
+      amount: 0,
+      income: 0,
+      term: 0,
+      phone: '',
+      email: '',
+    },
     mode: 'onSubmit',
   });
 
@@ -85,8 +87,8 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Full name"
-              error={!!error}
+              label="ФИО"
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -98,8 +100,8 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Passport Number"
-              error={!!error}
+              label="Паспорт"
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -111,9 +113,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Phone"
+              label="Телефон"
               type="tel"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -127,7 +129,7 @@ export function CreditForm() {
               {...field}
               label="Email"
               type="email"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -139,9 +141,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Amount"
+              label="Сумма кредита"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -153,9 +155,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Term"
+              label="Срок (месяцы)"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -167,9 +169,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Income"
+              label="Доход"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -179,13 +181,13 @@ export function CreditForm() {
           name="purpose"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormControl error={!!error}>
-              <InputLabel id="purpose-label">Purpose</InputLabel>
+            <FormControl error={Boolean(error)}>
+              <InputLabel id="purpose-label">Цель кредита</InputLabel>
               <Select
                 {...field}
                 value={field.value ?? ''}
                 labelId="purpose-label"
-                label="Purpose"
+                label="Цель кредита"
               >
                 <MenuItem value="mortgage">Ипотека</MenuItem>
                 <MenuItem value="auto-loan">Автокредит</MenuItem>
@@ -193,6 +195,7 @@ export function CreditForm() {
                 <MenuItem value="refinancing">Рефинансирование</MenuItem>
                 <MenuItem value="business">Бизнес</MenuItem>
               </Select>
+
               <FormHelperText>{error?.message}</FormHelperText>
             </FormControl>
           )}
@@ -202,28 +205,29 @@ export function CreditForm() {
           name="employmentStatus"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormControl error={!!error}>
+            <FormControl error={Boolean(error)}>
               <InputLabel id="employment-status-label">
-                Employment status
+                Статус занятости
               </InputLabel>
               <Select
                 {...field}
                 value={field.value ?? ''}
                 labelId="employment-status-label"
-                label="Employment status"
+                label="Статус занятости"
               >
                 <MenuItem value="employed">Работает</MenuItem>
                 <MenuItem value="unemployed">Безработный</MenuItem>
                 <MenuItem value="retiree">Пенсионер</MenuItem>
                 <MenuItem value="self-employed">Самозанятый</MenuItem>
               </Select>
+
               <FormHelperText>{error?.message}</FormHelperText>
             </FormControl>
           )}
         />
 
         <Button color="primary" variant="contained" type="submit">
-          Submit
+          Отправить заявку
         </Button>
       </FormControl>
     </form>
