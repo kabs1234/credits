@@ -18,20 +18,9 @@ const formRequiredErrorMessage = {
 };
 
 const formSchema = z.object({
-  clientName: z
-    .string()
-    .min(2, {
-      error: 'Имя должно иметь не менее 2 символов.',
-    })
-    .refine(
-      (formName) => {
-        const nameRegExp = new RegExp('^[a-zA-Z А-Яа-я]+$');
-        return nameRegExp.test(formName);
-      },
-      {
-        error: 'Имя должно быть без цифр',
-      }
-    ),
+  clientName: z.string().min(2, {
+    error: 'Имя должно иметь не менее 2 символов.',
+  }),
   passportNumber: z.string().min(7, formRequiredErrorMessage),
   phone: z.e164(formRequiredErrorMessage),
   email: z.email(formRequiredErrorMessage),
