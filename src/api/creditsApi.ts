@@ -1,7 +1,7 @@
 import { BASE_URL } from '../const';
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Credits } from '../types/types';
+import type { Credit, Credits, RequestCredit } from '../types/types';
 
 export const creditsApi = createApi({
   reducerPath: 'creditsApi',
@@ -10,7 +10,16 @@ export const creditsApi = createApi({
     getCredits: build.query<Credits, void>({
       query: () => 'loans',
     }),
+    createCredit: build.mutation<Credit, RequestCredit>({
+      query: (credit) => {
+        return {
+          url: 'loans',
+          method: 'POST',
+          body: credit,
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetCreditsQuery } = creditsApi;
+export const { useGetCreditsQuery, useCreateCreditMutation } = creditsApi;

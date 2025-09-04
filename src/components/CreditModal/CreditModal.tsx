@@ -60,7 +60,7 @@ export default function CreditModal(): ReactElement {
             <span className="visually-hidden">Close card form</span>
           </Button>
 
-          <CreditForm />
+          <CreditForm onModalClose={onModalClose} />
 
           {isLoading && <Loader isAction />}
         </Box>

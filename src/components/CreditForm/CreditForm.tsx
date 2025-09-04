@@ -10,68 +10,91 @@ import {
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateCreditMutation } from '../../api/creditsApi';
+import { useQueryAction } from '../../hooks/hooks';
+import type { Credit, RequestCredit } from '../../types/types';
+import {
+  showSuccessToast,
+  showErrorToast,
+  getActionErrorMessage,
+  getObjectWithErrorMessage,
+  translateEmploymentStasus,
+  translateCreditPurpose,
+} from '../../utils/utils';
 
-type FormType = z.infer<typeof formSchema>;
+export type FormType = z.infer<typeof formSchema>;
+
+const fieldRequiredErrorMessage = getObjectWithErrorMessage(
+  'Должно быть заполнено'
+);
+
+const fieldNotPositiveErrorMessage = getObjectWithErrorMessage(
+  'Значение должны быть положительным'
+);
+
+const fieldNotSelectedErrorMessage = getObjectWithErrorMessage(
+  'Пожалуйста, выберите один из вариантов. Это обязательное поле.'
+);
+
+const zodPositiveNumberField = z.coerce
+  .number<number>(fieldRequiredErrorMessage)
+  .min(1, fieldNotPositiveErrorMessage);
 
 const formSchema = z.object({
-  clientName: z
-    .string()
-    .min(2, {
-      error: 'Name must be at least 2 characters.',
-    })
-    .refine(
-      (formName) => {
-        const nameRegExp = new RegExp('^[a-zA-Z А-Яа-я]+$');
-        return nameRegExp.test(formName);
-      },
-      {
-        error: 'Name must be without digits',
-      }
-    ),
-  passportNumber: z.string().min(7, {
-    error: 'Must be filled',
-  }),
-  phone: z.e164().nonempty(),
-  email: z.email(),
-  amount: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  term: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  income: z.number().min(1, {
-    error: 'Must be filled',
-  }),
-  creditScore: z.number().min(3, {
-    error: 'Must be filled',
-  }),
+  fullName: z
+    .string(fieldRequiredErrorMessage)
+    .min(2, getObjectWithErrorMessage('Имя должно иметь не менее 2 символов.')),
+  passportNumber: z.string(fieldRequiredErrorMessage),
+  phone: z.e164(fieldRequiredErrorMessage),
+  email: z.email(fieldRequiredErrorMessage),
+  amount: zodPositiveNumberField,
+  term: zodPositiveNumberField,
+  income: zodPositiveNumberField,
   purpose: z.literal(
     ['mortgage', 'auto-loan', 'consumer-loan', 'refinancing', 'business'],
-    {
-      error: 'Purpose field is required. Choose one of the options please',
-    }
+    fieldNotSelectedErrorMessage
   ),
   employmentStatus: z.literal(
     ['employed', 'unemployed', 'retiree', 'self-employed'],
-    {
-      error:
-        'Employment status field is required. Choose one of the options please',
-    }
+    fieldNotSelectedErrorMessage
   ),
 });
 
-export function CreditForm() {
+export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
+  const [createCredit] = useCreateCreditMutation();
+
   const { control, handleSubmit } = useForm<FormType>({
     resolver: zodResolver(formSchema),
     mode: 'onSubmit',
   });
 
-  const onValid: SubmitHandler<FormType> = (data): void => {
-    console.log(data);
+  const onSuccesfulAction = (message: string): void => {
+    showSuccessToast(message);
+
+    if (onModalClose) {
+      onModalClose();
+    }
+  };
+
+  const tryToCreateCredit = useQueryAction<Credit, RequestCredit>({
+    action: createCredit,
+    onSuccess: () => onSuccesfulAction('Заявка была успешно подана!'),
+    onError: () => showErrorToast(getActionErrorMessage('create')),
+  });
+
+  const onValidForm: SubmitHandler<FormType> = (credit): void => {
+    const requestCredit = {
+      ...credit,
+      employmentStatus: translateEmploymentStasus(credit.employmentStatus),
+      purpose: translateCreditPurpose(credit.purpose),
+      createdAt: new Date().toISOString(),
+    };
+
+    tryToCreateCredit(requestCredit);
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <form onSubmit={handleSubmit(onValidForm)}>
       <FormControl
         sx={{
           display: 'grid',
@@ -80,13 +103,13 @@ export function CreditForm() {
         }}
       >
         <Controller
-          name="clientName"
+          name="fullName"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Full name"
-              error={!!error}
+              label="ФИО"
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -98,8 +121,8 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Passport Number"
-              error={!!error}
+              label="Паспорт"
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -111,9 +134,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Phone"
+              label="Телефон"
               type="tel"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -127,7 +150,7 @@ export function CreditForm() {
               {...field}
               label="Email"
               type="email"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -139,9 +162,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Amount"
+              label="Сумма кредита"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -153,9 +176,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Term"
+              label="Срок (месяцы)"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -167,9 +190,9 @@ export function CreditForm() {
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
-              label="Income"
+              label="Доход"
               type="number"
-              error={!!error}
+              error={Boolean(error)}
               helperText={error?.message}
             />
           )}
@@ -179,13 +202,13 @@ export function CreditForm() {
           name="purpose"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormControl error={!!error}>
-              <InputLabel id="purpose-label">Purpose</InputLabel>
+            <FormControl error={Boolean(error)}>
+              <InputLabel id="purpose-label">Цель кредита</InputLabel>
               <Select
                 {...field}
                 value={field.value ?? ''}
                 labelId="purpose-label"
-                label="Purpose"
+                label="Цель кредита"
               >
                 <MenuItem value="mortgage">Ипотека</MenuItem>
                 <MenuItem value="auto-loan">Автокредит</MenuItem>
@@ -193,6 +216,7 @@ export function CreditForm() {
                 <MenuItem value="refinancing">Рефинансирование</MenuItem>
                 <MenuItem value="business">Бизнес</MenuItem>
               </Select>
+
               <FormHelperText>{error?.message}</FormHelperText>
             </FormControl>
           )}
@@ -202,28 +226,29 @@ export function CreditForm() {
           name="employmentStatus"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormControl error={!!error}>
+            <FormControl error={Boolean(error)}>
               <InputLabel id="employment-status-label">
-                Employment status
+                Статус занятости
               </InputLabel>
               <Select
                 {...field}
                 value={field.value ?? ''}
                 labelId="employment-status-label"
-                label="Employment status"
+                label="Статус занятости"
               >
                 <MenuItem value="employed">Работает</MenuItem>
                 <MenuItem value="unemployed">Безработный</MenuItem>
                 <MenuItem value="retiree">Пенсионер</MenuItem>
                 <MenuItem value="self-employed">Самозанятый</MenuItem>
               </Select>
+
               <FormHelperText>{error?.message}</FormHelperText>
             </FormControl>
           )}
         />
 
         <Button color="primary" variant="contained" type="submit">
-          Submit
+          Отправить заявку
         </Button>
       </FormControl>
     </form>

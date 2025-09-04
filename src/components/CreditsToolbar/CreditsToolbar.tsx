@@ -54,14 +54,14 @@ export default function CreditsToolbar() {
   return (
     <Toolbar>
       <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
-        Credits Table
+        Таблица заявок
       </Typography>
 
-      <Tooltip title="add Credit request">
+      <Tooltip title="Оставить заявку">
         <CreditModal />
       </Tooltip>
 
-      <Tooltip title="Filters">
+      <Tooltip title="Фильтры">
         <FilterPanelTrigger
           render={(props, state) => (
             <ToolbarButton {...props} color="default">
@@ -87,7 +87,7 @@ export default function CreditsToolbar() {
       <StyledQuickFilter>
         <QuickFilterTrigger
           render={(triggerProps, state) => (
-            <Tooltip title="Search" enterDelay={0}>
+            <Tooltip title="Поиск" enterDelay={0}>
               <StyledToolbarButton
                 {...triggerProps}
                 ownerState={{ expanded: state.expanded }}
