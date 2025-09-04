@@ -35,6 +35,24 @@ export const creditsSlice = createSlice({
         state.credits = [...state.credits, action.payload];
       }
     );
+    builder.addMatcher(
+      creditsApi.endpoints.reconsiderCredit.matchFulfilled,
+      (state, action: PayloadAction<Credit>) => {
+        const editedCredit = action.payload;
+        const CreditToReplace = state.credits.find((credit) => {
+          return credit.id === editedCredit.id;
+        });
+        const creditToReplaceIndex = state.credits.findIndex((credit) => {
+          return credit.id === (CreditToReplace as Credit).id;
+        });
+
+        state.credits = [
+          ...state.credits.slice(0, creditToReplaceIndex),
+          editedCredit,
+          ...state.credits.slice(creditToReplaceIndex + 1),
+        ];
+      }
+    );
   },
 });
 

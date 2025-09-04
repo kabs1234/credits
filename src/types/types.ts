@@ -57,6 +57,6 @@ export type CreditFieldAndHeader = {
   headerName: string;
 };
 
-export type CreditActions = 'create';
+export type CreditActions = 'create' | 'reconsider';
 
 export type RequestCredit = Omit<Credit, 'id' | 'creditScore' | 'status'>;

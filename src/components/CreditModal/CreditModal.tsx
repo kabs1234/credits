@@ -7,7 +7,7 @@ import { getIsLoading } from '../../store/creditsSlice/credits.selectors';
 import { CreditForm } from '../CreditForm/CreditForm';
 import AddIcon from '@mui/icons-material/Add';
 
-const cardFormStyles = {
+const formStyles = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -54,10 +54,10 @@ export default function CreditModal(): ReactElement {
       </Button>
 
       <Modal open={isModalOpen} onClose={onModalClose}>
-        <Box sx={cardFormStyles}>
+        <Box sx={formStyles}>
           <Button sx={closeFormButtonStyles} onClick={onModalClose}>
             <CloseIcon />
-            <span className="visually-hidden">Close card form</span>
+            <span className="visually-hidden">Close form</span>
           </Button>
 
           <CreditForm onModalClose={onModalClose} />

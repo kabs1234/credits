@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import type { TableCreditsType } from '../../types/types';
 import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
+import TableActionButton from '../TableActionButton/TableActionButton';
+import type { ReactElement } from 'react';
 
 const columns: GridColDef<TableCreditsType[number]>[] = [
   {
@@ -73,6 +75,16 @@ const columns: GridColDef<TableCreditsType[number]>[] = [
     width: 180,
     sortable: true,
     type: 'string',
+  },
+  {
+    field: 'action',
+    headerName: 'Обновление статуса',
+    width: 180,
+    sortable: false,
+
+    renderCell: (params): ReactElement => {
+      return <TableActionButton cell={params} />;
+    },
   },
 ];
 
