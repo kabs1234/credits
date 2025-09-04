@@ -96,7 +96,7 @@ export default function TableCredits({
         slots={{
           toolbar: CreditsToolbar,
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[10]}
         disableRowSelectionOnClick
         disableColumnMenu
         disableColumnResize
