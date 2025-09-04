@@ -16,6 +16,8 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
+import { Typography } from '@mui/material';
+import CreditModal from '../CreditModal/CreditModal';
 
 type OwnerState = {
   expanded: boolean;
@@ -51,6 +53,14 @@ const StyledTextField = styled(TextField)<{
 export default function CreditsToolbar() {
   return (
     <Toolbar>
+      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
+        Credits Table
+      </Typography>
+
+      <Tooltip title="add Credit request">
+        <CreditModal />
+      </Tooltip>
+
       <Tooltip title="Filters">
         <FilterPanelTrigger
           render={(props, state) => (
