@@ -9,22 +9,29 @@ import type {
   EmploymentStasuses,
   SelectValuesCreditPurposes,
   SelectValuesEmploymentStasuses,
+  ToastPositions,
 } from '../types/types';
 
 export const showErrorToast = (
-  message: string = DEFAULT_ERROR_ACTION_MESSAGE
+  message: string = DEFAULT_ERROR_ACTION_MESSAGE,
+  position: ToastPositions = 'top-right'
 ): void => {
-  toast.error(message);
+  toast.error(message, {
+    position,
+  });
 };
 
 export const showSuccessToast = (
-  message: string = DEFAULT_SUCCESSFUL_ACTION_MESSAGE
+  message: string = DEFAULT_SUCCESSFUL_ACTION_MESSAGE,
+  position: ToastPositions = 'top-right'
 ): void => {
-  toast.success(message);
+  toast.success(message, {
+    position,
+  });
 };
 
 export const getActionErrorMessage = (action: CreditActions): string => {
-  return `Unexpected error occured. Please try to ${action} the credit again`;
+  return `Непредвиденная ошибка. Пожалуйста, попробуйте ${action} кредит снова`;
 };
 
 export const getObjectWithErrorMessage = (
@@ -65,4 +72,14 @@ export const translateCreditPurpose = (
     case 'business':
       return 'бизнес';
   }
+};
+
+export const IsCreditStatusApproved = (): 'approved' | 'rejected' => {
+  const randomPercentage = Math.random() * 100;
+
+  if (randomPercentage > 50) {
+    return 'approved';
+  }
+
+  return 'rejected';
 };

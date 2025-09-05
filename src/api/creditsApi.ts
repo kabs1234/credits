@@ -7,6 +7,7 @@ import type {
   RequestCredit,
   TableCredit,
 } from '../types/types';
+import { IsCreditStatusApproved } from '../utils/utils';
 
 export const creditsApi = createApi({
   reducerPath: 'creditsApi',
@@ -36,6 +37,18 @@ export const creditsApi = createApi({
         };
       },
     }),
+    viewCreditRequest: build.mutation<Credit, TableCredit>({
+      query: (credit) => {
+        return {
+          url: `loans/${credit.id}`,
+          method: 'PUT',
+          body: {
+            ...credit,
+            status: IsCreditStatusApproved(),
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -43,4 +56,5 @@ export const {
   useGetCreditsQuery,
   useCreateCreditMutation,
   useReconsiderCreditMutation,
+  useViewCreditRequestMutation,
 } = creditsApi;

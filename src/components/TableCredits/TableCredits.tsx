@@ -2,8 +2,8 @@ import Box from '@mui/material/Box';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import type { TableCreditsType } from '../../types/types';
 import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
-import TableActionButton from '../TableActionButton/TableActionButton';
 import type { ReactElement } from 'react';
+import TableCellActions from '../TableCellActions/TableCellActions';
 
 const columns: GridColDef<TableCreditsType[number]>[] = [
   {
@@ -83,7 +83,7 @@ const columns: GridColDef<TableCreditsType[number]>[] = [
     sortable: false,
 
     renderCell: (params): ReactElement => {
-      return <TableActionButton cell={params} />;
+      return <TableCellActions cell={params} />;
     },
   },
 ];
