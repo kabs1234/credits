@@ -39,17 +39,31 @@ export const creditsSlice = createSlice({
       creditsApi.endpoints.reconsiderCredit.matchFulfilled,
       (state, action: PayloadAction<Credit>) => {
         const editedCredit = action.payload;
-        const CreditToReplace = state.credits.find((credit) => {
+        const credits = state.credits;
+        const creditToReplaceIndex = credits.findIndex((credit) => {
           return credit.id === editedCredit.id;
-        });
-        const creditToReplaceIndex = state.credits.findIndex((credit) => {
-          return credit.id === (CreditToReplace as Credit).id;
         });
 
         state.credits = [
-          ...state.credits.slice(0, creditToReplaceIndex),
+          ...credits.slice(0, creditToReplaceIndex),
           editedCredit,
-          ...state.credits.slice(creditToReplaceIndex + 1),
+          ...credits.slice(creditToReplaceIndex + 1),
+        ];
+      }
+    );
+    builder.addMatcher(
+      creditsApi.endpoints.viewCreditRequest.matchFulfilled,
+      (state, action: PayloadAction<Credit>) => {
+        const editedCredit = action.payload;
+        const credits = state.credits;
+        const creditToReplaceIndex = credits.findIndex((credit) => {
+          return credit.id === editedCredit.id;
+        });
+
+        state.credits = [
+          ...credits.slice(0, creditToReplaceIndex),
+          editedCredit,
+          ...credits.slice(creditToReplaceIndex + 1),
         ];
       }
     );

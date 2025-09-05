@@ -79,7 +79,7 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
   const tryToCreateCredit = useQueryAction<Credit, RequestCredit>({
     action: createCredit,
     onSuccess: () => onSuccesfulAction('Заявка была успешно подана!'),
-    onError: () => showErrorToast(getActionErrorMessage('create')),
+    onError: () => showErrorToast(getActionErrorMessage('создать')),
   });
 
   const onValidForm: SubmitHandler<FormType> = (credit): void => {
