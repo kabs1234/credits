@@ -5,6 +5,7 @@ import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
 import type { ReactElement } from 'react';
 import TableCellActions from '../TableCellActions/TableCellActions';
 import CreditStatus from '../CreditStatus/CreditStatus';
+import dayjs from 'dayjs';
 
 const columns: GridColDef<TableCreditsType[number]>[] = [
   {
@@ -82,6 +83,13 @@ const columns: GridColDef<TableCreditsType[number]>[] = [
     width: 180,
     sortable: true,
     type: 'string',
+
+    renderCell: (params): ReactElement => {
+      const createdCreditDate = params.row.createdAt;
+      const humanizedData = dayjs(createdCreditDate).format('DD.MM.YYYY HH:mm');
+
+      return <span>{humanizedData}</span>;
+    },
   },
   {
     field: 'action',
