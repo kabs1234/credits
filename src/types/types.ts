@@ -57,7 +57,11 @@ export type CreditFieldAndHeader = {
   headerName: string;
 };
 
-export type CreditActions = 'создать' | 'пересмотреть' | 'рассмотреть';
+export type CreditActions =
+  | 'создать'
+  | 'пересмотреть'
+  | 'рассмотреть'
+  | 'удалить';
 
 export type RequestCredit = Omit<Credit, 'id' | 'creditScore' | 'status'>;
 

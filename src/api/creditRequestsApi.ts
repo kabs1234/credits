@@ -65,4 +65,5 @@ export const {
   useCreateCreditMutation,
   useReconsiderCreditMutation,
   useViewCreditMutation,
+  useDeleteCreditMutation,
 } = creditRequestsApi;
