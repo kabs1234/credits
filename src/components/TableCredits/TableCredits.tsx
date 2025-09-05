@@ -4,6 +4,7 @@ import type { TableCreditsType } from '../../types/types';
 import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
 import type { ReactElement } from 'react';
 import TableCellActions from '../TableCellActions/TableCellActions';
+import CreditStatus from '../CreditStatus/CreditStatus';
 
 const columns: GridColDef<TableCreditsType[number]>[] = [
   {
@@ -64,10 +65,16 @@ const columns: GridColDef<TableCreditsType[number]>[] = [
   {
     field: 'status',
     headerName: 'Статус заявки',
-    width: 120,
+    width: 160,
     sortable: false,
     filterable: true,
     type: 'custom',
+
+    renderCell: (params): ReactElement => {
+      const credit = params.row;
+
+      return <CreditStatus status={credit.status} />;
+    },
   },
   {
     field: 'createdAt',

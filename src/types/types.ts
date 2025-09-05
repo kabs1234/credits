@@ -30,6 +30,15 @@ export type CreditRequestStates =
   | 'rejected'
   | 'in_review';
 
+export type MuiStandartColors =
+  | 'primary'
+  | 'success'
+  | 'error'
+  | 'secondary'
+  | 'info'
+  | 'warning'
+  | 'default';
+
 export type Credit = {
   id: string;
   fullName: string;
