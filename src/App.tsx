@@ -1,4 +1,4 @@
-import { useGetCreditsQuery } from './api/creditsApi';
+import { useGetCreditsQuery } from './api/creditRequestsApi.ts';
 import Loader from './components/Loader/Loader';
 import { useAppSelector } from './hooks/store';
 import { getCredits } from './store/creditsSlice/credits.selectors';

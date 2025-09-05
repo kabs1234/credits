@@ -9,8 +9,8 @@ import type {
 } from '../types/types';
 import { IsCreditStatusApproved } from '../utils/utils';
 
-export const creditsApi = createApi({
-  reducerPath: 'creditsApi',
+export const creditRequestsApi = createApi({
+  reducerPath: 'creditRequestsApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (build) => ({
     getCredits: build.query<Credits, void>({
@@ -37,7 +37,7 @@ export const creditsApi = createApi({
         };
       },
     }),
-    viewCreditRequest: build.mutation<Credit, TableCredit>({
+    viewCredit: build.mutation<Credit, TableCredit>({
       query: (credit) => {
         return {
           url: `loans/${credit.id}`,
@@ -49,6 +49,14 @@ export const creditsApi = createApi({
         };
       },
     }),
+    deleteCredit: build.mutation<Credit, number>({
+      query: (id) => {
+        return {
+          url: `loans/${id}`,
+          method: 'DELETE',
+        };
+      },
+    }),
   }),
 });
 
@@ -56,5 +64,5 @@ export const {
   useGetCreditsQuery,
   useCreateCreditMutation,
   useReconsiderCreditMutation,
-  useViewCreditRequestMutation,
-} = creditsApi;
+  useViewCreditMutation,
+} = creditRequestsApi;

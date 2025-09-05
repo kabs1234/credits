@@ -10,7 +10,7 @@ import {
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateCreditMutation } from '../../api/creditsApi';
+import { useCreateCreditMutation } from '../../api/creditRequestsApi';
 import { useQueryAction } from '../../hooks/hooks';
 import type { Credit, RequestCredit } from '../../types/types';
 import {

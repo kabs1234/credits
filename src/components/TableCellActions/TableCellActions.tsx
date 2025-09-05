@@ -1,8 +1,8 @@
 import { useState, type ReactElement } from 'react';
 import {
   useReconsiderCreditMutation,
-  useViewCreditRequestMutation,
-} from '../../api/creditsApi';
+  useViewCreditMutation,
+} from '../../api/creditRequestsApi';
 import { Button, Menu, MenuItem } from '@mui/material';
 import type {
   GridRenderCellParams,
@@ -31,8 +31,7 @@ export default function TableCellActions({
 
   const [reconsiderCredit, reconsiderCreditResult] =
     useReconsiderCreditMutation();
-  const [viewCreditRequest, viewCreditRequestResult] =
-    useViewCreditRequestMutation();
+  const [viewCredit, viewCreditRequestResult] = useViewCreditMutation();
 
   const isActionsLoading =
     reconsiderCreditResult.isLoading || viewCreditRequestResult.isLoading;
@@ -46,7 +45,7 @@ export default function TableCellActions({
   });
 
   const tryToViewCreditRequest = useQueryAction<Credit, TableCredit>({
-    action: viewCreditRequest,
+    action: viewCredit,
     onSuccess: () => showSuccessToast('Заявка была рассмотрена!', 'top-center'),
     onError: () =>
       showErrorToast(getActionErrorMessage('рассмотреть'), 'top-center'),
