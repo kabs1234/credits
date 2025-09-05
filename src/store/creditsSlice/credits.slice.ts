@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { Namespace } from '../../const';
-import { creditsApi } from '../../api/creditsApi';
 import type { Credit, Credits } from '../../types/types';
+import { creditRequestsApi } from '../../api/creditRequestsApi';
 
 type CreditsSlice = {
   credits: Credits;
@@ -23,20 +23,20 @@ export const creditsSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addMatcher(
-      creditsApi.endpoints.getCredits.matchFulfilled,
+      creditRequestsApi.endpoints.getCredits.matchFulfilled,
       (state, action: PayloadAction<Credits>) => {
         state.credits = action.payload;
         state.isLoading = false;
       }
     );
     builder.addMatcher(
-      creditsApi.endpoints.createCredit.matchFulfilled,
+      creditRequestsApi.endpoints.createCredit.matchFulfilled,
       (state, action: PayloadAction<Credit>) => {
         state.credits = [...state.credits, action.payload];
       }
     );
     builder.addMatcher(
-      creditsApi.endpoints.reconsiderCredit.matchFulfilled,
+      creditRequestsApi.endpoints.reconsiderCredit.matchFulfilled,
       (state, action: PayloadAction<Credit>) => {
         const editedCredit = action.payload;
         const credits = state.credits;
@@ -52,7 +52,7 @@ export const creditsSlice = createSlice({
       }
     );
     builder.addMatcher(
-      creditsApi.endpoints.viewCreditRequest.matchFulfilled,
+      creditRequestsApi.endpoints.viewCredit.matchFulfilled,
       (state, action: PayloadAction<Credit>) => {
         const editedCredit = action.payload;
         const credits = state.credits;
@@ -64,6 +64,21 @@ export const creditsSlice = createSlice({
           ...credits.slice(0, creditToReplaceIndex),
           editedCredit,
           ...credits.slice(creditToReplaceIndex + 1),
+        ];
+      }
+    );
+    builder.addMatcher(
+      creditRequestsApi.endpoints.deleteCredit.matchFulfilled,
+      (state, action: PayloadAction<Credit>) => {
+        const credits = state.credits;
+        const deletedCard = action.payload;
+        const deletedCardIndex = credits.findIndex((credits) => {
+          return credits.id === deletedCard.id;
+        });
+
+        state.credits = [
+          ...credits.slice(0, deletedCardIndex),
+          ...credits.slice(deletedCardIndex + 1),
         ];
       }
     );
