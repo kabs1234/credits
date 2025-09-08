@@ -26,7 +26,7 @@ const closeFormButtonStyles = {
   minWidth: '30px',
   width: '30px',
   height: '30px',
-  padding: 0,
+  padding: '25px',
   top: 0,
   right: 0,
 };

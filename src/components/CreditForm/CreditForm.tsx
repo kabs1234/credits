@@ -6,6 +6,7 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
+  Typography,
 } from '@mui/material';
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
@@ -65,6 +66,15 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
 
   const { control, handleSubmit } = useForm<FormType>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      fullName: '',
+      passportNumber: '',
+      phone: '',
+      amount: 0,
+      term: 0,
+      income: 0,
+    },
     mode: 'onSubmit',
   });
 
@@ -94,163 +104,179 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onValidForm)}>
-      <FormControl
+    <>
+      <Typography
+        variant="h4"
+        component="h1"
         sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '40px',
+          marginBottom: 4,
+          backgroundClip: 'text',
+          textAlign: 'center',
+          fontWeight: 600,
+          letterSpacing: '0.5px',
         }}
       >
-        <Controller
-          name="fullName"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="ФИО"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
+        Форма для заявки кредита
+      </Typography>
 
-        <Controller
-          name="passportNumber"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Паспорт"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="phone"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Телефон"
-              type="tel"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="email"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Email"
-              type="email"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="amount"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Сумма кредита"
-              type="number"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="term"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Срок (месяцы)"
-              type="number"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="income"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              label="Доход"
-              type="number"
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="purpose"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <FormControl error={Boolean(error)}>
-              <InputLabel id="purpose-label">Цель кредита</InputLabel>
-              <Select
+      <form onSubmit={handleSubmit(onValidForm)}>
+        <FormControl
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '40px',
+          }}
+        >
+          <Controller
+            name="fullName"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
                 {...field}
-                value={field.value ?? ''}
-                labelId="purpose-label"
-                label="Цель кредита"
-              >
-                <MenuItem value="mortgage">Ипотека</MenuItem>
-                <MenuItem value="autoLoan">Автокредит</MenuItem>
-                <MenuItem value="consumerLoan">Потребительский</MenuItem>
-                <MenuItem value="refinancing">Рефинансирование</MenuItem>
-                <MenuItem value="business">Бизнес</MenuItem>
-              </Select>
+                label="ФИО"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
 
-              <FormHelperText>{error?.message}</FormHelperText>
-            </FormControl>
-          )}
-        />
-
-        <Controller
-          name="employmentStatus"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <FormControl error={Boolean(error)}>
-              <InputLabel id="employment-status-label">
-                Статус занятости
-              </InputLabel>
-              <Select
+          <Controller
+            name="passportNumber"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
                 {...field}
-                value={field.value ?? ''}
-                labelId="employment-status-label"
-                label="Статус занятости"
-              >
-                <MenuItem value="employed">Работает</MenuItem>
-                <MenuItem value="unemployed">Безработный</MenuItem>
-                <MenuItem value="retiree">Пенсионер</MenuItem>
-                <MenuItem value="selfEmployed">Самозанятый</MenuItem>
-              </Select>
+                label="Паспорт"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
 
-              <FormHelperText>{error?.message}</FormHelperText>
-            </FormControl>
-          )}
-        />
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Телефон"
+                type="tel"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
 
-        <Button color="primary" variant="contained" type="submit">
-          Отправить заявку
-        </Button>
-      </FormControl>
-    </form>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Email"
+                type="email"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Сумма кредита"
+                type="number"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="term"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Срок (месяцы)"
+                type="number"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="income"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                label="Доход"
+                type="number"
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="purpose"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl error={Boolean(error)}>
+                <InputLabel id="purpose-label">Цель кредита</InputLabel>
+                <Select
+                  {...field}
+                  value={field.value ?? ''}
+                  labelId="purpose-label"
+                  label="Цель кредита"
+                >
+                  <MenuItem value="mortgage">Ипотека</MenuItem>
+                  <MenuItem value="autoLoan">Автокредит</MenuItem>
+                  <MenuItem value="consumerLoan">Потребительский</MenuItem>
+                  <MenuItem value="refinancing">Рефинансирование</MenuItem>
+                  <MenuItem value="business">Бизнес</MenuItem>
+                </Select>
+
+                <FormHelperText>{error?.message}</FormHelperText>
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            name="employmentStatus"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl error={Boolean(error)}>
+                <InputLabel id="employment-status-label">
+                  Статус занятости
+                </InputLabel>
+                <Select
+                  {...field}
+                  value={field.value ?? ''}
+                  labelId="employment-status-label"
+                  label="Статус занятости"
+                >
+                  <MenuItem value="employed">Работает</MenuItem>
+                  <MenuItem value="unemployed">Безработный</MenuItem>
+                  <MenuItem value="retiree">Пенсионер</MenuItem>
+                  <MenuItem value="selfEmployed">Самозанятый</MenuItem>
+                </Select>
+
+                <FormHelperText>{error?.message}</FormHelperText>
+              </FormControl>
+            )}
+          />
+
+          <Button color="primary" variant="contained" type="submit">
+            Отправить заявку
+          </Button>
+        </FormControl>
+      </form>
+    </>
   );
 }

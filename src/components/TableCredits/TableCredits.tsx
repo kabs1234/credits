@@ -170,6 +170,9 @@ export default function TableCredits({
       <DataGrid
         rows={credits}
         columns={columns}
+        sx={{
+          '& .MuiDataGrid-main': { padding: '0 20px' },
+        }}
         initialState={{
           pagination: {
             paginationModel: {
