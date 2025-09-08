@@ -11,17 +11,17 @@ import {
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateCreditMutation } from '../../api/creditRequestsApi';
-import { useQueryAction } from '../../hooks/hooks';
-import type { Credit, RequestCredit } from '../../types/types';
+import { useCreateCreditMutation } from '../../../api/creditRequestsApi';
+import { useQueryAction } from '../../../hooks/hooks';
+import type { Credit, RequestCredit } from '../../../types/types';
 import {
+  getObjectWithErrorMessage,
   showSuccessToast,
   showErrorToast,
   getActionErrorMessage,
-  getObjectWithErrorMessage,
   getTranslatedEmploymentStatus,
   getTranslatedCreditPurpose,
-} from '../../utils/utils';
+} from '../../../utils/utils';
 
 export type FormType = z.infer<typeof formSchema>;
 

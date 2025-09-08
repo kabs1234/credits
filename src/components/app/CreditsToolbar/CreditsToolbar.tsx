@@ -16,8 +16,11 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SearchIcon from '@mui/icons-material/Search';
-import { Typography } from '@mui/material';
-import CreditModal from '../CreditModal/CreditModal';
+import { Button, Typography } from '@mui/material';
+import CustomModal from '../../ui/CustomModal/CustomModal';
+import { CreditForm } from '../CreditForm/CreditForm';
+import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 
 type OwnerState = {
   expanded: boolean;
@@ -51,15 +54,29 @@ const StyledTextField = styled(TextField)<{
 }));
 
 export default function CreditsToolbar() {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const onAddCreditButtonClick = (): void => {
+    setIsModalOpen(true);
+  };
+
+  const onModalClose = (): void => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Toolbar>
       <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
         Таблица заявок
       </Typography>
 
-      <Tooltip title="Оставить заявку">
-        <CreditModal />
-      </Tooltip>
+      <Button onClick={onAddCreditButtonClick}>
+        <AddIcon fontSize="small" />
+      </Button>
+
+      <CustomModal isModalOpen={isModalOpen} onModalClose={onModalClose}>
+        <CreditForm onModalClose={onModalClose} />
+      </CustomModal>
 
       <Tooltip title="Фильтры">
         <FilterPanelTrigger

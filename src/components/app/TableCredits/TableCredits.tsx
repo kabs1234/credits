@@ -5,15 +5,14 @@ import {
   type GridEventListener,
   type GridRowParams,
 } from '@mui/x-data-grid';
-import type { Credit, TableCreditsType } from '../../types/types';
+import type { Credit, TableCreditsType } from '../../../types/types';
 import CreditsToolbar from '../CreditsToolbar/CreditsToolbar';
 import { useState, type ReactElement } from 'react';
 import TableCellActions from '../TableCellActions/TableCellActions';
 import CreditStatus from '../CreditStatus/CreditStatus';
 import FullCredit from '../ExpandedCredit/ExpandedCredit';
-import { Modal, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { getFormatDate } from '../../utils/utils';
+import { getFormatDate } from '../../../utils/utils';
+import CustomModal from '../../ui/CustomModal/CustomModal';
 
 const columns: GridColDef<TableCreditsType[number]>[] = [
   {
@@ -111,41 +110,13 @@ const columns: GridColDef<TableCreditsType[number]>[] = [
   },
 ];
 
-const formStyles = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  minWidth: '280px',
-  minHeight: '340px',
-  boxShadow: 24,
-  p: '40px 30px',
-  bgcolor: 'background.paper',
-  '& .MuiBackdrop-root': { backgroundColor: 'transparent' },
-};
-
-const closeFormButtonStyles = {
-  position: 'absolute',
-  display: 'flex',
-  minWidth: '30px',
-  width: '30px',
-  height: '30px',
-  padding: 0,
-  top: 0,
-  right: 0,
-};
-
 export default function TableCredits({
   credits,
 }: {
   credits: TableCreditsType;
 }) {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [credit, setCredit] = useState<Credit | null>(null);
-
-  const onModalClose = (): void => {
-    setIsModalOpen(false);
-  };
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleEvent: GridEventListener<'rowClick'> = (
     params: GridRowParams<Credit>
@@ -154,18 +125,15 @@ export default function TableCredits({
     setCredit(params.row);
   };
 
+  const onModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Modal open={isModalOpen} onClose={onModalClose}>
-        <Box sx={formStyles}>
-          <Button sx={closeFormButtonStyles} onClick={onModalClose}>
-            <CloseIcon />
-            <span className="visually-hidden">Close form</span>
-          </Button>
-
-          <FullCredit credit={credit as Credit} />
-        </Box>
-      </Modal>
+      <CustomModal isModalOpen={isModalOpen} onModalClose={onModalClose}>
+        <FullCredit credit={credit as Credit} />
+      </CustomModal>
 
       <DataGrid
         rows={credits}

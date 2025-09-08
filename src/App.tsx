@@ -1,9 +1,9 @@
 import { useGetCreditsQuery } from './api/creditRequestsApi.ts';
-import Loader from './components/Loader/Loader';
+import Loader from './components/ui/Loader/Loader.tsx';
 import { useAppSelector } from './hooks/store';
 import { getCredits } from './store/creditsSlice/credits.selectors';
 import './style.css';
-import TableCredits from './components/TableCredits/TableCredits.tsx';
+import TableCredits from './components/app/TableCredits/TableCredits.tsx';
 
 function App() {
   const { isUninitialized, isLoading, isError } = useGetCreditsQuery();
