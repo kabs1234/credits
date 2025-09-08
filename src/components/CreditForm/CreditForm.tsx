@@ -18,8 +18,8 @@ import {
   showErrorToast,
   getActionErrorMessage,
   getObjectWithErrorMessage,
-  translateEmploymentStasus,
-  translateCreditPurpose,
+  getTranslatedEmploymentStatus,
+  getTranslatedCreditPurpose,
 } from '../../utils/utils';
 
 export type FormType = z.infer<typeof formSchema>;
@@ -51,11 +51,11 @@ const formSchema = z.object({
   term: zodPositiveNumberField,
   income: zodPositiveNumberField,
   purpose: z.literal(
-    ['mortgage', 'auto-loan', 'consumer-loan', 'refinancing', 'business'],
+    ['mortgage', 'autoLoan', 'consumerLoan', 'refinancing', 'business'],
     fieldNotSelectedErrorMessage
   ),
   employmentStatus: z.literal(
-    ['employed', 'unemployed', 'retiree', 'self-employed'],
+    ['employed', 'unemployed', 'retiree', 'selfEmployed'],
     fieldNotSelectedErrorMessage
   ),
 });
@@ -85,8 +85,8 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
   const onValidForm: SubmitHandler<FormType> = (credit): void => {
     const requestCredit = {
       ...credit,
-      employmentStatus: translateEmploymentStasus(credit.employmentStatus),
-      purpose: translateCreditPurpose(credit.purpose),
+      employmentStatus: getTranslatedEmploymentStatus(credit.employmentStatus),
+      purpose: getTranslatedCreditPurpose(credit.purpose),
       createdAt: new Date().toISOString(),
     };
 
@@ -211,8 +211,8 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
                 label="Цель кредита"
               >
                 <MenuItem value="mortgage">Ипотека</MenuItem>
-                <MenuItem value="auto-loan">Автокредит</MenuItem>
-                <MenuItem value="consumer-loan">Потребительский</MenuItem>
+                <MenuItem value="autoLoan">Автокредит</MenuItem>
+                <MenuItem value="consumerLoan">Потребительский</MenuItem>
                 <MenuItem value="refinancing">Рефинансирование</MenuItem>
                 <MenuItem value="business">Бизнес</MenuItem>
               </Select>
@@ -239,7 +239,7 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
                 <MenuItem value="employed">Работает</MenuItem>
                 <MenuItem value="unemployed">Безработный</MenuItem>
                 <MenuItem value="retiree">Пенсионер</MenuItem>
-                <MenuItem value="self-employed">Самозанятый</MenuItem>
+                <MenuItem value="selfEmployed">Самозанятый</MenuItem>
               </Select>
 
               <FormHelperText>{error?.message}</FormHelperText>

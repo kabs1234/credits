@@ -1,16 +1,22 @@
 import { toast } from 'react-toastify';
+
 import {
   DEFAULT_ERROR_ACTION_MESSAGE,
   DEFAULT_SUCCESSFUL_ACTION_MESSAGE,
 } from '../const';
+
 import type {
   CreditActions,
-  CreditPurposes,
   EmploymentStasuses,
   SelectValuesCreditPurposes,
   SelectValuesEmploymentStasuses,
   ToastPositions,
+  CreditPurposes,
+  CreditRequestStates,
+  CreditRequestStateValues,
 } from '../types/types';
+
+import dayjs from 'dayjs';
 
 export const showErrorToast = (
   message: string = DEFAULT_ERROR_ACTION_MESSAGE,
@@ -42,7 +48,7 @@ export const getObjectWithErrorMessage = (
   };
 };
 
-export const translateEmploymentStasus = (
+export const getTranslatedEmploymentStatus = (
   employmentStatus: SelectValuesEmploymentStasuses
 ): EmploymentStasuses => {
   switch (employmentStatus) {
@@ -52,25 +58,53 @@ export const translateEmploymentStasus = (
       return 'безработный';
     case 'retiree':
       return 'пенсионер';
-    case 'self-employed':
+    case 'selfEmployed':
       return 'самозанятый';
   }
 };
 
-export const translateCreditPurpose = (
+export const getTranslatedCreditRequestStatus = (
+  creditPurpose: CreditRequestStates
+): CreditRequestStateValues => {
+  switch (creditPurpose) {
+    case 'approved':
+      return 'одобрено';
+    case 'pending':
+      return 'ожидание';
+    case 'rejected':
+      return 'отклонено';
+    case 'in_review':
+      return 'рассмотрение';
+  }
+};
+
+export const getTranslatedCreditPurpose = (
   creditPurpose: SelectValuesCreditPurposes
 ): CreditPurposes => {
   switch (creditPurpose) {
     case 'mortgage':
       return 'ипотека';
-    case 'auto-loan':
+    case 'autoLoan':
       return 'автокредит';
-    case 'consumer-loan':
+    case 'consumerLoan':
       return 'потребительский';
     case 'refinancing':
       return 'рефинансирование';
     case 'business':
       return 'бизнес';
+  }
+};
+
+export const getStatusColor = (status: CreditRequestStates) => {
+  switch (status) {
+    case 'approved':
+      return 'success';
+    case 'pending':
+      return 'warning';
+    case 'rejected':
+      return 'error';
+    default:
+      return 'default';
   }
 };
 
@@ -82,4 +116,22 @@ export const IsCreditStatusApproved = (): 'approved' | 'rejected' => {
   }
 
   return 'rejected';
+};
+
+export const getFormatDate = (date: string, format: string): string => {
+  return dayjs(date).format(format);
+};
+
+export const formatNumber = (
+  number: number,
+  format: string = 'ru-RU'
+): string => {
+  return new Intl.NumberFormat(format).format(number);
+};
+
+export const formatCurrencyAmount = (
+  amount: number,
+  currency: string = '₽'
+): string => {
+  return `${formatNumber(amount)} ${currency}`;
 };

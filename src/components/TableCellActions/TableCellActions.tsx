@@ -29,9 +29,11 @@ export default function TableCellActions({
   const creditId = Number(cell.row.id);
 
   const onMenuButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    evt: React.MouseEvent<HTMLButtonElement>
   ): void => {
-    setAnchorElement(event.currentTarget);
+    evt.stopPropagation();
+
+    setAnchorElement(evt.currentTarget);
   };
 
   const onMenuClose = (): void => {
