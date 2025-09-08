@@ -3,14 +3,14 @@ import {
   useDeleteCreditMutation,
   useReconsiderCreditMutation,
   useViewCreditMutation,
-} from '../../api/creditRequestsApi';
+} from '../../../api/creditRequestsApi';
 import { Button, Menu, MenuItem } from '@mui/material';
 import type {
   GridRenderCellParams,
   GridTreeNodeWithRender,
 } from '@mui/x-data-grid';
-import type { TableCredit } from '../../types/types';
-import ActionButton from '../ActionButton/ActionButton';
+import type { TableCredit } from '../../../types/types';
+import ActionButton from '../../ui/ActionButton/ActionButton';
 
 export default function TableCellActions({
   cell,

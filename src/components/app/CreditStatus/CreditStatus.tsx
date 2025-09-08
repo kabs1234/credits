@@ -1,14 +1,14 @@
 import type { ReactElement } from 'react';
-import type {
-  CreditRequestStates,
-  CreditRequestStateValues,
-  MuiStandartColors,
-} from '../../types/types';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 import DoneIcon from '@mui/icons-material/Done';
 import PendingIcon from '@mui/icons-material/Pending';
 import { Chip, type SvgIconProps } from '@mui/material';
+import type {
+  CreditRequestStates,
+  CreditRequestStateValues,
+  MuiStandartColors,
+} from '../../../types/types';
 
 export default function CreditStatus({
   status,

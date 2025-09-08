@@ -7,15 +7,15 @@ import type {
   TypedUseMutation,
 } from '@reduxjs/toolkit/query/react';
 import type { ReactElement } from 'react';
-import { useQueryAction } from '../../hooks/hooks';
+import { useQueryAction } from '../../../hooks/hooks';
+import { useAppSelector } from '../../../hooks/store';
+import { getIsLoading } from '../../../store/creditsSlice/credits.selectors';
+import type { CreditActions } from '../../../types/types';
 import {
   showSuccessToast,
   showErrorToast,
   getActionErrorMessage,
-} from '../../utils/utils';
-import type { CreditActions } from '../../types/types';
-import { useAppSelector } from '../../hooks/store';
-import { getIsLoading } from '../../store/creditsSlice/credits.selectors';
+} from '../../../utils/utils';
 
 export default function ActionButton<ResultType, QueryArg>({
   text,

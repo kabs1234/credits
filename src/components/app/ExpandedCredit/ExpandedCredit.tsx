@@ -10,13 +10,13 @@ import {
   Score as ScoreIcon,
   Schedule as ScheduleIcon,
 } from '@mui/icons-material';
-import type { Credit } from '../../types/types';
+import type { Credit } from '../../../types/types';
 import {
   getFormatDate,
   getStatusColor,
   getTranslatedCreditRequestStatus,
   formatCurrencyAmount,
-} from '../../utils/utils';
+} from '../../../utils/utils';
 import CreditItem from '../CreditItem/CreditItem';
 
 export default function ExpandedCredit({ credit }: { credit: Credit }) {
