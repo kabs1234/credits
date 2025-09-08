@@ -1,34 +1,20 @@
-export type CreditPurposes =
-  | 'ипотека'
-  | 'автокредит'
-  | 'потребительский'
-  | 'рефинансирование'
-  | 'бизнес';
+import type {
+  CREDIT_PURPOSES,
+  CREDIT_REQUEST_STATES,
+  EMPLOYMENT_STATUSES,
+} from '../const';
 
-export type SelectValuesCreditPurposes =
-  | 'mortgage'
-  | 'auto-loan'
-  | 'consumer-loan'
-  | 'refinancing'
-  | 'business';
-
+export type SelectValuesEmploymentStasuses = keyof typeof EMPLOYMENT_STATUSES;
 export type EmploymentStasuses =
-  | 'работает'
-  | 'безработный'
-  | 'пенсионер'
-  | 'самозанятый';
+  (typeof EMPLOYMENT_STATUSES)[keyof typeof EMPLOYMENT_STATUSES];
 
-export type SelectValuesEmploymentStasuses =
-  | 'employed'
-  | 'unemployed'
-  | 'retiree'
-  | 'self-employed';
+export type SelectValuesCreditPurposes = keyof typeof CREDIT_PURPOSES;
+export type CreditPurposes =
+  (typeof CREDIT_PURPOSES)[keyof typeof CREDIT_PURPOSES];
 
-export type CreditRequestStates =
-  | 'pending'
-  | 'approved'
-  | 'rejected'
-  | 'in_review';
+export type CreditRequestStates = keyof typeof CREDIT_REQUEST_STATES;
+export type CreditRequestStateValues =
+  (typeof CREDIT_REQUEST_STATES)[keyof typeof CREDIT_REQUEST_STATES];
 
 export type MuiStandartColors =
   | 'primary'

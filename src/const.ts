@@ -8,3 +8,25 @@ export const DEFAULT_ERROR_ACTION_MESSAGE =
 export enum Namespace {
   Credits = 'Credits',
 }
+
+export const EMPLOYMENT_STATUSES = {
+  employed: 'работает',
+  unemployed: 'безработный',
+  retiree: 'пенсионер',
+  selfEmployed: 'самозанятый',
+} as const;
+
+export const CREDIT_PURPOSES = {
+  mortgage: 'ипотека',
+  autoLoan: 'автокредит',
+  consumerLoan: 'потребительский',
+  refinancing: 'рефинансирование',
+  business: 'бизнес',
+} as const;
+
+export const CREDIT_REQUEST_STATES = {
+  pending: 'ожидание',
+  approved: 'одобрено',
+  rejected: 'отклонено',
+  in_review: 'рассмотрение',
+} as const;
