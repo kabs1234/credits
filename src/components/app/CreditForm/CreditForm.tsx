@@ -1,13 +1,4 @@
-import {
-  TextField,
-  Button,
-  MenuItem,
-  Select,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Typography,
-} from '@mui/material';
+import { TextField, Button, FormControl, Typography } from '@mui/material';
 import { z } from 'zod';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,6 +13,9 @@ import {
   getTranslatedEmploymentStatus,
   getTranslatedCreditPurpose,
 } from '../../../utils/utils';
+import CustomSelect from '../../ui/CustomSelect/CustomSelect';
+import { CREDIT_PURPOSES, EMPLOYMENT_STATUSES } from '../../../const';
+import NumberInput from '../../ui/NumberInput/NumberInput';
 
 export type FormType = z.infer<typeof formSchema>;
 
@@ -71,9 +65,6 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
       fullName: '',
       passportNumber: '',
       phone: '',
-      amount: 0,
-      term: 0,
-      income: 0,
     },
     mode: 'onSubmit',
   });
@@ -185,13 +176,7 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
             name="amount"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Сумма кредита"
-                type="number"
-                error={Boolean(error)}
-                helperText={error?.message}
-              />
+              <NumberInput field={field} error={error} label="Сумма кредита" />
             )}
           />
 
@@ -199,13 +184,7 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
             name="term"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Срок (месяцы)"
-                type="number"
-                error={Boolean(error)}
-                helperText={error?.message}
-              />
+              <NumberInput field={field} error={error} label="Срок (месяцы)" />
             )}
           />
 
@@ -213,13 +192,7 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
             name="income"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                label="Доход"
-                type="number"
-                error={Boolean(error)}
-                helperText={error?.message}
-              />
+              <NumberInput field={field} error={error} label="Доход" />
             )}
           />
 
@@ -227,23 +200,13 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
             name="purpose"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <FormControl error={Boolean(error)}>
-                <InputLabel id="purpose-label">Цель кредита</InputLabel>
-                <Select
-                  {...field}
-                  value={field.value ?? ''}
-                  labelId="purpose-label"
-                  label="Цель кредита"
-                >
-                  <MenuItem value="mortgage">Ипотека</MenuItem>
-                  <MenuItem value="autoLoan">Автокредит</MenuItem>
-                  <MenuItem value="consumerLoan">Потребительский</MenuItem>
-                  <MenuItem value="refinancing">Рефинансирование</MenuItem>
-                  <MenuItem value="business">Бизнес</MenuItem>
-                </Select>
-
-                <FormHelperText>{error?.message}</FormHelperText>
-              </FormControl>
+              <CustomSelect
+                labelText="Цель кредита"
+                labelId="purpose-label"
+                field={field}
+                properties={CREDIT_PURPOSES}
+                error={error}
+              />
             )}
           />
 
@@ -251,24 +214,13 @@ export function CreditForm({ onModalClose }: { onModalClose?: () => void }) {
             name="employmentStatus"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <FormControl error={Boolean(error)}>
-                <InputLabel id="employment-status-label">
-                  Статус занятости
-                </InputLabel>
-                <Select
-                  {...field}
-                  value={field.value ?? ''}
-                  labelId="employment-status-label"
-                  label="Статус занятости"
-                >
-                  <MenuItem value="employed">Работает</MenuItem>
-                  <MenuItem value="unemployed">Безработный</MenuItem>
-                  <MenuItem value="retiree">Пенсионер</MenuItem>
-                  <MenuItem value="selfEmployed">Самозанятый</MenuItem>
-                </Select>
-
-                <FormHelperText>{error?.message}</FormHelperText>
-              </FormControl>
+              <CustomSelect
+                field={field}
+                labelId="employment-status-label"
+                labelText="Статус занятости"
+                properties={EMPLOYMENT_STATUSES}
+                error={error}
+              />
             )}
           />
 
